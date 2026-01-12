@@ -1,9 +1,12 @@
 from tkinter import *
 from tkinter import ttk
+from functions import *
+from db import *
+import my_windows
 
 root = Tk()
-frm = ttk.Frame(root, padding=10)
-frm.grid()
-ttk.Label(frm, text="Simple File encryptor")
-ttk.Button(frm, text=("Quit"), command=root.destroy).grid(column=1, row=0)
+root.title("whatever")
+root.geometry("250x200")
+but = Button(root, text="Отправить", command=my_windows.encrypt_window)
+but.pack(anchor=W)
 root.mainloop()
