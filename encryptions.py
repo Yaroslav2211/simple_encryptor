@@ -1,5 +1,6 @@
 from age import cli
 import functions
+from age.keys import ageKey
 
 def encr(username, con):
     curs = con.cursor()
@@ -10,3 +11,6 @@ def encr(username, con):
     infile = functions.fchoose("rb")
     outfile = functions.fchoose("wb")
     cli.encrypt(key, infile, outfile)
+
+def generate_keys():
+    
