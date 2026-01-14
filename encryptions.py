@@ -1,6 +1,7 @@
 from age import cli
 import functions
 from age.keys import agekey
+import os
 
 def encr(username, con,infile,outfile):
     curs = con.cursor()
@@ -9,6 +10,19 @@ def encr(username, con,infile,outfile):
     key = res.fetchone()[0]
     key = (key,)
     cli.encrypt(key, infile, outfile)
+
+def decr(username,con,infile,outfile):
+    curs = con.cursor()
+    users = list(username)
+    res = curs.execute("SELECT privkey FROM receivers WHERE name = ?", users)
+    key = res.fetchone()[0]
+    keyfile = open("keyfile.txt", "w")
+    keyfile.write(key)
+    keyfile.write("\n")
+    keyfile.close()
+    cli.decrypt(infile, outfile, keyfiles=("keyfile.txt",))
+    os.remove("keyfile.txt")
+
 
 def derive_publikey(privkey):
     if type(privkey) == string():

@@ -3,25 +3,11 @@ from tkinter import ttk
 import db
 from functions import *
 import encryptions
-'''
-def encrypt_window(con):
-    encr_w = Tk()
-    encr_w.title("Отправка")
-    encr_w.geometry("400x200")
-    users_listbox = Listbox(encr_w)
-    update_listbox(users_listbox,con,"receivers")
-    encr_but = Button(encr_w,text="Зашифровать для получателя", command= lambda: encr_button_handler(users_listbox,con))
-    encr_but.pack(anchor=NW)
-    del_but = Button(encr_w,text="Удалить",command= lambda: del_button_handler(users_listbox,con))
-    del_but.pack(anchor=NW,side="left")
-    add_but = Button(encr_w,text="Добавить",command= lambda: create_user_window(users_listbox,con))
-    add_but.pack(anchor=NE,side="right")
-    users_listbox.pack(fill=X,padx=5, pady=5,side="bottom")
-'''
+
 def encrypt_window(con):
     root = Tk()
     root.title("Окно шифрования")
-    root.geometry("400x500")
+    root.geometry("600x500")
 
     # Create main frame
     main_frame = Frame(root)
@@ -54,12 +40,12 @@ def encrypt_window(con):
         else:
             show_toast("Сначала выберите пользователя!")
 
-    def encrypt_for_user():
+    def encrypt_for_user(mode="encrypt"):
         """Callback to handle encryption action for selected user"""
         selection = user_listbox.curselection()
         if selection:
             username = user_listbox.get(selection[0])
-            show_encryption_dialog(username,con,root)
+            show_encryption_dialog(username,con,root,mode)
         else:
             show_toast("Сначала выберите пользователя!")
 
@@ -75,14 +61,12 @@ def encrypt_window(con):
     delete_button.pack(side=LEFT, padx=(0, 5), fill=X, expand=True)
 
     encrypt_button = Button(button_frame, text="Зашифровать для пользователя", command=encrypt_for_user)
-    encrypt_button.pack(side=LEFT, fill=X, expand=True)
+    encrypt_button.pack(side=LEFT, padx=(0, 5), fill=X, expand=True)
 
-    decrypt_button = Button(button_frame, text="Расшифровать от пользователя", command=lambda: decrypt_dialog()) 
+    decrypt_button = Button(button_frame, text="Расшифровать от пользователя", command=lambda: encrypt_for_user("decrypt"))
+    decrypt_button.pack(side=LEFT,fill=X, expand=True)
 
-def decrypt_window(con):
-    decr_w = Tk()
-    decr_w.title("Получение")
-    decr_w.geometry("400x200")
+    root.mainloop()
 
 def add_user(con, user_listbox):
     """
@@ -248,22 +232,31 @@ def show_toast(message, duration=3000):
     if duration > 0:
         toast.after(duration, toast.destroy)
 
-def show_encryption_dialog(username, con, parent=None):
+def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
     """
     Show an encryption dialog with file selection options and encrypt functionality.
     
     Args:
         parent: Parent window (optional)
     """
+    filetypes_in = [
+        ("All Files", "*.*"),
+        ("Text Files", "*.txt"),
+        ("Document Files", "*.doc;*.docx"),
+        ("PDF Files", "*.pdf")
+    ]
+    filetypes_out = [
+        ("Encrypted Files", "*.age"),
+    ]
+    if mode == "decrypt":
+        temp = filetypes_in
+        filetypes_in = filetypes_out
+        filetypes_out = temp
+        del temp
     def browse_input_file():
         file_path = filedialog.askopenfilename(
             title="Select Input File",
-            filetypes=[
-                ("All Files", "*.*"),
-                ("Text Files", "*.txt"),
-                ("Document Files", "*.doc;*.docx"),
-                ("PDF Files", "*.pdf")
-            ]
+            filetypes = filetypes_in
         )
         if file_path:
             input_file_var.set(file_path)
@@ -277,9 +270,7 @@ def show_encryption_dialog(username, con, parent=None):
             defaultextension=".age",
             initialdir=initial_dir,
             initialfile=initial_file,
-            filetypes=[
-                ("Encrypted Files", "*.age"),
-            ]
+            filetypes=filetypes_out
         )
         if file_path:
             output_file_var.set(file_path)
@@ -311,7 +302,10 @@ def show_encryption_dialog(username, con, parent=None):
     def perform_encryption(input_path, output_path):
         ifile = open(input_path, "rb")
         ofile = open(output_path, "wb")
-        encryptions.encr(username,con,ifile,ofile)
+        if mode == "encrypt":
+            encryptions.encr(username,con,ifile,ofile)
+        elif mode == "decrypt":
+            encryptions.decr(username,con,ifile,ofile)
 
     # Create the main dialog window
     parent = parent or _default_root
