@@ -7,7 +7,7 @@ import encryptions
 def encrypt_window(con):
     root = Tk()
     root.title("Окно шифрования")
-    root.geometry("600x500")
+    root.geometry("1600x700")
 
     # Create main frame
     main_frame = Frame(root)
@@ -54,10 +54,10 @@ def encrypt_window(con):
     button_frame.pack(fill=X)
 
     # Create and pack buttons
-    add_button = Button(button_frame, text="Add user", command=lambda: add_user(con,user_listbox))
+    add_button = Button(button_frame, text="Добавить пользователя", command=lambda: add_user(con,user_listbox))
     add_button.pack(side=LEFT, padx=(0, 5), fill=X, expand=True)
 
-    delete_button = Button(button_frame, text="Delete user", command=delete_user)
+    delete_button = Button(button_frame, text="Удалить пользователя", command=delete_user)
     delete_button.pack(side=LEFT, padx=(0, 5), fill=X, expand=True)
 
     encrypt_button = Button(button_frame, text="Зашифровать для пользователя", command=encrypt_for_user)
@@ -79,7 +79,7 @@ def add_user(con, user_listbox):
     """
     root = Tk()
     root.title("Добавление пользователя")
-    root.geometry("600x300")
+    root.geometry("800x500")
 
     # Main container frame
     main_frame = Frame(root, padx=20, pady=20)
@@ -94,12 +94,12 @@ def add_user(con, user_listbox):
     username_entry = Entry(username_frame, font=("Arial", 10))
     username_entry.pack(side=LEFT, fill=X, expand=True, padx=(0, 10))
     username_entry.insert(0, "")  # Placeholder hint in actual use would require additional code
-
     # Public Key field with generation button
+
     public_key_frame = Frame(main_frame)
     public_key_frame.pack(fill=X, pady=(0, 15))
     
-    Label(public_key_frame, text="Public key:", font=("Arial", 10, "bold")).pack(anchor=W)
+    Label(public_key_frame, text="Публичный ключ:", font=("Arial", 10, "bold")).pack(anchor=W)
     
     public_key_entry = Entry(public_key_frame, font=("Arial", 10))
     public_key_entry.pack(side=LEFT, fill=X, expand=True, padx=(0, 10))
@@ -130,7 +130,7 @@ def add_user(con, user_listbox):
     private_key_frame = Frame(main_frame)
     private_key_frame.pack(fill=X, pady=(0, 15))
     
-    Label(private_key_frame, text="Private key (optional):", font=("Arial", 10, "bold")).pack(anchor=W)
+    Label(private_key_frame, text="Приватный ключ (опционально):", font=("Arial", 10, "bold")).pack(anchor=W)
     
     private_key_entry = Entry(private_key_frame, font=("Arial", 10), show="*")  # Hidden by default
     private_key_entry.pack(side=LEFT, fill=X, expand=True, padx=(0, 10))
@@ -138,10 +138,10 @@ def add_user(con, user_listbox):
         """Toggle visibility of private key"""
         if private_key_entry.cget('show') == '*':
             private_key_entry.config(show='')
-            visibility_btn.config(text='Hide')
+            visibility_btn.config(text='Скрыть')
         else:
             private_key_entry.config(show='*')
-            visibility_btn.config(text='Show')
+            visibility_btn.config(text='Показать')
     
     # Frame for private key buttons
     private_btn_frame = Frame(private_key_frame)
@@ -149,7 +149,7 @@ def add_user(con, user_listbox):
 
     priv_gen_btn = Button(private_btn_frame, text="Сгенерировать ключи", command=generate_keypair)
     
-    visibility_btn = Button(private_btn_frame, text="Show", command=toggle_private_visibility)
+    visibility_btn = Button(private_btn_frame, text="Показать", command=toggle_private_visibility)
     visibility_btn.pack(side=LEFT, padx=(0, 5))
 
     def submit_handler():
@@ -162,7 +162,7 @@ def add_user(con, user_listbox):
             root.destroy()
 
     # Submit button at bottom
-    submit_btn = Button(main_frame, text="Submit", bg="#4CAF50", fg="white", 
+    submit_btn = Button(main_frame, text="Подтвердить", bg="#4CAF50", fg="white", 
                           font=("Arial", 10, "bold"), height=2,
                           command=submit_handler)
     submit_btn.pack(fill=X, pady=(10, 0))    
@@ -177,7 +177,7 @@ def show_toast(message, duration=3000):
     """
     # Create the main toast window
     toast = Toplevel()
-    toast.title("Toast Notification")
+    toast.title("Предупреждение")
     toast.overrideredirect(True)  # Remove window decorations
     toast.attributes('-topmost', True)  # Keep on top
     
@@ -202,7 +202,7 @@ def show_toast(message, duration=3000):
     # Add the close button
     close_btn = Button(
         padding_frame,
-        text="Close",
+        text="Закрыть",
         command=toast.destroy,
         bg='#444444',
         fg='white',
@@ -255,7 +255,7 @@ def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
         del temp
     def browse_input_file():
         file_path = filedialog.askopenfilename(
-            title="Select Input File",
+            title="Выберите вводный файл",
             filetypes = filetypes_in
         )
         if file_path:
@@ -266,7 +266,7 @@ def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
         initial_file = os.path.basename(input_file_var.get()).rsplit('.', 1)[0] + "_encrypted" if input_file_var.get() else "encrypted_file"
         
         file_path = filedialog.asksaveasfilename(
-            title="Save Encrypted File As",
+            title="Сохранить",
             defaultextension=".age",
             initialdir=initial_dir,
             initialfile=initial_file,
@@ -281,15 +281,15 @@ def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
         
         # Validate inputs
         if not input_path:
-            messagebox.showerror("Error", "Please select an input file.")
+            messagebox.showerror("Ошибка", "Выберите исходный файл")
             return
         
         if not output_path:
-            messagebox.showerror("Error", "Please specify where to save the encrypted file.")
+            messagebox.showerror("Ошибка", "Выберите куда сохранить зашифрованный файл!")
             return
         
         if not os.path.exists(input_path):
-            messagebox.showerror("Error", f"Input file does not exist:\n{input_path}")
+            messagebox.showerror("Ошибка", f"Файл не найден:\n{input_path}")
             return
         
         # Perform encryption
@@ -297,7 +297,7 @@ def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
             perform_encryption(input_path, output_path)
             dialog.destroy()
         except Exception as e:
-            messagebox.showerror("Error", f"Encryption failed:\n{str(e)}")
+            messagebox.showerror("Ошибка", f"Ошибка шифрования:\n{str(e)}")
     
     def perform_encryption(input_path, output_path):
         ifile = open(input_path, "rb")
@@ -310,9 +310,9 @@ def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
     # Create the main dialog window
     parent = parent or _default_root
     dialog = Toplevel(parent)
-    dialog.title("File Encryption")
-    dialog.geometry("500x200")
-    dialog.resizable(False, False)
+    dialog.title("Шифрование файлов")
+    dialog.geometry("1000x300")
+    dialog.resizable(True, True)
     dialog.transient(parent)
     dialog.grab_set()  # Modal behavior
     
@@ -331,25 +331,25 @@ def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
     main_frame.grid(row=0, column=0, sticky=(W, E, N, S))
     
     # Input file selection
-    ttk.Label(main_frame, text="Input File:").grid(row=0, column=0, sticky=W, pady=(0, 10))
+    ttk.Label(main_frame, text="Исходный файл:").grid(row=0, column=0, sticky=W, pady=(0, 10))
     
     input_frame = ttk.Frame(main_frame)
     input_frame.grid(row=1, column=0, columnspan=2, sticky=(W, E), pady=(0, 10))
     
     ttk.Entry(input_frame, textvariable=input_file_var, width=50).pack(side=LEFT, fill=X, expand=True)
-    ttk.Button(input_frame, text="Browse...", command=browse_input_file).pack(side=RIGHT, padx=(10, 0))
+    ttk.Button(input_frame, text="Обзор...", command=browse_input_file).pack(side=RIGHT, padx=(10, 0))
     
     # Output file selection
-    ttk.Label(main_frame, text="Save As:").grid(row=2, column=0, sticky=W, pady=(0, 10))
+    ttk.Label(main_frame, text="Сохранить как:").grid(row=2, column=0, sticky=W, pady=(0, 10))
     
     output_frame = ttk.Frame(main_frame)
     output_frame.grid(row=3, column=0, columnspan=2, sticky=(W, E), pady=(0, 10))
     
     ttk.Entry(output_frame, textvariable=output_file_var, width=50).pack(side=LEFT, fill=X, expand=True)
-    ttk.Button(output_frame, text="Browse...", command=browse_output_file).pack(side=RIGHT, padx=(10, 0))
+    ttk.Button(output_frame, text="Обзор...", command=browse_output_file).pack(side=RIGHT, padx=(10, 0))
     
     # Encrypt button
-    ttk.Button(main_frame, text="Encrypt!", command=start_encryption).grid(row=4, column=0, columnspan=2, pady=20)
+    ttk.Button(main_frame, text="Зашифровать!", command=start_encryption).grid(row=4, column=0, columnspan=2, pady=20)
     
     # Configure grid weights
     main_frame.columnconfigure(0, weight=1)
