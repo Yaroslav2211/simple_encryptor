@@ -242,6 +242,7 @@ def show_encryption_dialog(username, con, parent=None, mode="encrypt"):
     filetypes_in = [
         ("All Files", "*.*"),
         ("Text Files", "*.txt"),
+        ("Pictures", "*.png"),
         ("Document Files", "*.doc;*.docx"),
         ("PDF Files", "*.pdf")
     ]
